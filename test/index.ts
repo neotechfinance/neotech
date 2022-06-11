@@ -66,14 +66,14 @@ describe("NeoTechNFT", function () {
                 + await neoTechToken.balanceOf(giveawayWinner.address) + "NFTs.\n"
     );
 
-    // un-pause the contract as the owner
+    // un-pause the contract as owner
     await neoTechToken.connect(owner).setPaused(false).should.be.fulfilled;
     // try to mint an NFT when the current phase is already reached
     await neoTechToken.connect(userWithUSDT).mint(1).should.be.rejectedWith("Minted tokens would exceed supply allocated for the current phase.");
 
     // try to increase the phase max limit when not the owner 
     await neoTechToken.connect(userWithUSDT).setMaxSupplyForCurrentPhase(15).should.be.rejectedWith("Ownable: caller is not the owner");
-    // increase the phase max limit as the owner
+    // increase the phase max limit as owner
     await neoTechToken.connect(owner).setMaxSupplyForCurrentPhase(15).should.be.fulfilled;  
     
     // try to withdraw when not the owner
@@ -111,8 +111,12 @@ describe("NeoTechNFT", function () {
       userWithUSDT.address + " balance after widraw - "
               + await usdtToken.balanceOf(owner.address) + "$USDT"
     );
+
+    // try to set base uri when not the owner 
+    await neoTechToken.connect(userWithUSDT).setBaseURI('https://api.neotech.test/nft/').should.be.rejectedWith("Ownable: caller is not the owner");
+    // set base uri as owner 
+    await neoTechToken.connect(owner).setBaseURI('https://api.neotech.test/nft/').should.be.fulfilled;
+    // get token uri for the first token
+    (await neoTechToken.connect(userWithUSDT).tokenURI(1)).should.be.equal("https://api.neotech.test/nft/1");
   });
-
-
-
 });
