@@ -4,9 +4,11 @@ import { HardhatUserConfig, task } from "hardhat/config";
 import "@nomiclabs/hardhat-etherscan";
 import "@nomiclabs/hardhat-waffle";
 import "@typechain/hardhat";
-import "@openzeppelin/hardhat-upgrades";
 import "hardhat-gas-reporter";
+import "@openzeppelin/hardhat-upgrades";
 import "solidity-coverage";
+import "hardhat-deploy";
+import "@nomiclabs/hardhat-etherscan";
 
 dotenv.config();
 
@@ -26,16 +28,11 @@ task("accounts", "Prints the list of accounts", async (taskArgs, hre) => {
 const config: HardhatUserConfig = {
   solidity: "0.8.4",
   networks: {
-    hardhat: {
-      forking: {
-        url: "https://eth-mainnet.alchemyapi.io/v2/PtTJAgaFtOK1BTaKt8iVdBsfwKn1nYrO",
-      }
-    }
-    // ropsten: {
-    //   url: process.env.ROPSTEN_URL || "",
-    //   accounts:
-    //     process.env.PRIVATE_KEY !== undefined ? [process.env.PRIVATE_KEY] : [],
-    // },
+    rinkeby: {
+      url: process.env.RINKEBY_URL || "",
+      accounts:
+        process.env.PRIVATE_KEY !== undefined ? [process.env.PRIVATE_KEY] : [],
+    },
   },
   gasReporter: {
     enabled: process.env.REPORT_GAS !== undefined,
